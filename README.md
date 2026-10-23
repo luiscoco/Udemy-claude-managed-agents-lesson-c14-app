@@ -42,27 +42,75 @@ CLAUDE_MANAGED_ENVIRONMENT_ID=your_environment_id
 PORT=3014
 ```
 
-## How the application was developed
+## How the app was build
 
-The browser collects inputs; the Node host validates requests; the lesson implementation produces observable evidence. The architecture page walks through the real source with numbered steps, prerequisite configuration, source filenames and code excerpts.
+### 1. Resolve instructions from a trusted registry
 
-### Lesson implementation
+The style key must exist in the host-owned registry. Unreviewed keys are rejected instead of being treated as executable instruction templates.
 
-[src/lesson.ts](https://github.com/luiscoco/Udemy-claude-managed-agents-lesson-c14-app/blob/main/src/lesson.ts)
+Source: [src/lesson.ts](src/lesson.ts#L13) · selected statements
 
 ```typescript
-  async run(input) {
-
-const registry:Record<string,string>={"review-v2":"Explain the change, then provide a concise review checklist."};
-const key=text(input,"style");if(!Object.hasOwn(registry,key))return report("rejected","Unreviewed style key",{},["Resolve style in the trusted host registry"]);
-const system=["You are a project reviewer.",registry[key]].join("\n\n");
-return report("passed","Composed trusted instructions while keeping project facts separate",{styleSource:"host-registry",system,systemHash:hash(system),projectMessage:{role:"user",text:text(input,"facts")}},["Resolve a reviewed style","Compose rather than silently discard the base system","Hash the effective instruction bytes","Send project material as data"]);
-
-  }
+const registry: Record<string, string> = {
+  "review-v2": "Explain the change, then provide a concise review checklist.",
 };
+
+const key = text(input, "style");
 ```
 
-Read the architecture page for the remaining source excerpts and explanations, including input handling and optional provider behavior. The diagram describes this application, rather than implying that an external integration has been implemented.
+### 2. Compose the effective system text
+
+The base reviewer instruction and reviewed style are joined explicitly. This preserves the base instruction rather than accidentally replacing it with a style fragment.
+
+Source: [src/lesson.ts](src/lesson.ts#L15)
+
+```typescript
+const system = ["You are a project reviewer.", registry[key]].join("\n\n");
+```
+
+### 3. Keep project material in the user-data channel
+
+Hash the effective instruction bytes and inspect projectMessage separately. User-supplied facts are placed in a user message; they are not concatenated into the trusted system text.
+
+Source: [src/lesson.ts](src/lesson.ts#L16)
+
+```typescript
+return report(
+  "passed",
+  "Composed trusted instructions while keeping project facts separate",
+  {
+    styleSource: "host-registry",
+    system,
+    systemHash: hash(system),
+    projectMessage: { role: "user", text: text(input, "facts") },
+  },
+  [
+    "Resolve a reviewed style",
+    "Compose rather than silently discard the base system",
+    "Hash the effective instruction bytes",
+    "Send project material as data",
+  ],
+);
+```
+
+### Check your understanding
+
+Run **Compose the reviewed style** in the application. Compare the result with these scenario expectations:
+
+```json
+{
+  "input": {
+    "style": "review-v2",
+    "facts": "Aurora uses TypeScript."
+  },
+  "expectedOutcome": "passed",
+  "checkEvidence": {
+    "styleSource": "host-registry"
+  }
+}
+```
+
+Then try **Reject an unknown style**. Its expected outcome is `rejected`; identify the condition or evidence field that explains the difference.
 
 ## Validation
 
