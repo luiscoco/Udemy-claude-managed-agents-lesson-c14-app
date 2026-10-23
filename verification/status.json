@@ -1,0 +1,13 @@
+{
+  "lesson": "C14",
+  "title": "Instructions and Explicit Context",
+  "path": "lesson-c14\\lesson-c14-app",
+  "port": 3014,
+  "scenarios": 2,
+  "state": "implemented and verified",
+  "liveScope": "text-only commentary about the local result",
+  "typecheck": true,
+  "localTests": true,
+  "browserSmoke": "passed: desktop, mobile, scenario controls, source view",
+  "liveCommentarySmoke": "passed: real text-only session reached end_turn"
+}

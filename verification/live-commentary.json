@@ -1,0 +1,28 @@
+{
+  "source": "live-provider-commentary",
+  "sessionId": "sesn_01NuEZZJm1rr2CjitRMcUV3X",
+  "answer": "This local teaching experiment demonstrates composing trusted system instructions with separate project data, rather than silently discarding base context. It hashes the effective instruction bytes to verify integrity and keeps project facts (like \"Aurora uses TypeScript\") in the user/data layer. The outcome was \"passed,\" showing the approach successfully maintained clear separation between instruction sources and project material.",
+  "stopReason": "end_turn",
+  "eventTypes": [
+    "session.status_running",
+    "session.thread_status_running",
+    "user.message",
+    "span.model_request_start",
+    "agent.message",
+    "span.model_request_end",
+    "session.thread_status_idle",
+    "session.usage",
+    "session.status_idle"
+  ],
+  "requestUsage": [
+    {
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "input_tokens": 656,
+      "output_tokens": 76,
+      "speed": "standard"
+    }
+  ],
+  "experimentHash": "a9b7b8faa9caa0e714d8540593362cf46b702b788316af271c1cd081a31be45c",
+  "scope": "A real text-only model response about the local experiment. External integrations and the experiment's correctness are not certified by this response."
+}
